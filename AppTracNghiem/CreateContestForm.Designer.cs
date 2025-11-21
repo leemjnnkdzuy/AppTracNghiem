@@ -47,7 +47,6 @@ namespace AppTracNghiem
             label10 = new Label();
             dungeonNumeric1 = new ReaLTaiizor.Controls.DungeonNumeric();
             materialButton2 = new ReaLTaiizor.Controls.MaterialButton();
-            materialButton3 = new ReaLTaiizor.Controls.MaterialButton();
             materialButton4 = new ReaLTaiizor.Controls.MaterialButton();
             label11 = new Label();
             dungeonToggleButton1 = new ReaLTaiizor.Controls.DungeonToggleButton();
@@ -356,7 +355,7 @@ namespace AppTracNghiem
             materialButton2.HighEmphasis = true;
             materialButton2.Icon = (Image)resources.GetObject("materialButton2.Icon");
             materialButton2.IconType = ReaLTaiizor.Controls.MaterialButton.MaterialIconType.Rebase;
-            materialButton2.Location = new Point(12, 395);
+            materialButton2.Location = new Point(275, 347);
             materialButton2.Margin = new Padding(4, 6, 4, 6);
             materialButton2.MinimumSize = new Size(250, 36);
             materialButton2.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.HOVER;
@@ -370,46 +369,25 @@ namespace AppTracNghiem
             materialButton2.UseVisualStyleBackColor = true;
             materialButton2.Click += materialButton2_Click;
             // 
-            // materialButton3
-            // 
-            materialButton3.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            materialButton3.Cursor = Cursors.Hand;
-            materialButton3.Density = ReaLTaiizor.Controls.MaterialButton.MaterialButtonDensity.Default;
-            materialButton3.Depth = 0;
-            materialButton3.HighEmphasis = true;
-            materialButton3.Icon = (Image)resources.GetObject("materialButton3.Icon");
-            materialButton3.IconType = ReaLTaiizor.Controls.MaterialButton.MaterialIconType.Rebase;
-            materialButton3.Location = new Point(274, 395);
-            materialButton3.Margin = new Padding(4, 6, 4, 6);
-            materialButton3.MinimumSize = new Size(250, 36);
-            materialButton3.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.HOVER;
-            materialButton3.Name = "materialButton3";
-            materialButton3.NoAccentTextColor = Color.Empty;
-            materialButton3.Size = new Size(250, 36);
-            materialButton3.TabIndex = 33;
-            materialButton3.Text = "Hoàn Tất Tạo Đề";
-            materialButton3.Type = ReaLTaiizor.Controls.MaterialButton.MaterialButtonType.Contained;
-            materialButton3.UseAccentColor = false;
-            materialButton3.UseVisualStyleBackColor = true;
-            // 
             // materialButton4
             // 
             materialButton4.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             materialButton4.Cursor = Cursors.Hand;
             materialButton4.Density = ReaLTaiizor.Controls.MaterialButton.MaterialButtonDensity.Default;
             materialButton4.Depth = 0;
+            materialButton4.Font = new Font("Segoe UI", 14F);
             materialButton4.HighEmphasis = true;
             materialButton4.Icon = (Image)resources.GetObject("materialButton4.Icon");
             materialButton4.IconType = ReaLTaiizor.Controls.MaterialButton.MaterialIconType.Rebase;
-            materialButton4.Location = new Point(274, 347);
+            materialButton4.Location = new Point(12, 395);
             materialButton4.Margin = new Padding(4, 6, 4, 6);
-            materialButton4.MinimumSize = new Size(250, 36);
+            materialButton4.MinimumSize = new Size(513, 72);
             materialButton4.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.HOVER;
             materialButton4.Name = "materialButton4";
             materialButton4.NoAccentTextColor = Color.Empty;
-            materialButton4.Size = new Size(250, 36);
+            materialButton4.Size = new Size(513, 72);
             materialButton4.TabIndex = 34;
-            materialButton4.Text = "Lưu Nháp";
+            materialButton4.Text = "Lưu ";
             materialButton4.Type = ReaLTaiizor.Controls.MaterialButton.MaterialButtonType.Contained;
             materialButton4.UseAccentColor = true;
             materialButton4.UseVisualStyleBackColor = true;
@@ -594,7 +572,7 @@ namespace AppTracNghiem
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(535, 445);
+            ClientSize = new Size(535, 480);
             Controls.Add(label5);
             Controls.Add(hopeGroupBox2);
             Controls.Add(dungeonToggleButton4);
@@ -604,7 +582,6 @@ namespace AppTracNghiem
             Controls.Add(dtpEnd);
             Controls.Add(label11);
             Controls.Add(materialButton4);
-            Controls.Add(materialButton3);
             Controls.Add(materialButton2);
             Controls.Add(dungeonNumeric1);
             Controls.Add(label10);
@@ -653,7 +630,6 @@ namespace AppTracNghiem
         private Label label10;
         private ReaLTaiizor.Controls.DungeonNumeric dungeonNumeric1;
         private ReaLTaiizor.Controls.MaterialButton materialButton2;
-        private ReaLTaiizor.Controls.MaterialButton materialButton3;
         private ReaLTaiizor.Controls.MaterialButton materialButton4;
         private Label label11;
         private ReaLTaiizor.Controls.DungeonToggleButton dungeonToggleButton1;

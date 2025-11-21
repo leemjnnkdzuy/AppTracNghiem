@@ -31,7 +31,6 @@ namespace AppTracNghiem
 
             dungeonToggleButton1.Click += (s, e) => UpdateEndDateState();
             materialButton4.Click += MaterialButton4_Click;
-            materialButton3.Click += MaterialButton3_Click;
 
             UpdateEndDateState();
             UpdateMemberListButton();

@@ -245,8 +245,6 @@ namespace AppTracNghiem
                 Cursor = Cursors.Hand,
                 Type = ReaLTaiizor.Controls.MaterialButton.MaterialButtonType.Contained
             };
-            editBtn.Click += (s, e) => EditContest(contest, editBtn);
-            card.Controls.Add(editBtn);
 
             var deleteBtn = new ReaLTaiizor.Controls.MaterialButton
             {
@@ -258,7 +256,11 @@ namespace AppTracNghiem
                 Cursor = Cursors.Hand,
                 Type = ReaLTaiizor.Controls.MaterialButton.MaterialButtonType.Contained
             };
+
+            editBtn.Click += (s, e) => EditContest(contest, editBtn, deleteBtn);
             deleteBtn.Click += (s, e) => DeleteContest(contest);
+            
+            card.Controls.Add(editBtn);
             card.Controls.Add(deleteBtn);
 
             return card;
@@ -288,7 +290,7 @@ namespace AppTracNghiem
             };
         }
 
-        private async void EditContest(ContestModel contest, ReaLTaiizor.Controls.MaterialButton editBtn)
+        private async void EditContest(ContestModel contest, ReaLTaiizor.Controls.MaterialButton editBtn, ReaLTaiizor.Controls.MaterialButton deleteBtn)
         {
             try
             {
@@ -305,6 +307,7 @@ namespace AppTracNghiem
                 editBtn.Enabled = false;
                 editBtn.Text = "Đang mở...";
                 editBtn.Icon = null;
+                deleteBtn.Enabled = false;
 
                 var tokenData = TokenManager.GetTokenData();
                 if (tokenData == null)
@@ -313,6 +316,7 @@ namespace AppTracNghiem
                         "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     editBtn.Enabled = true;
                     editBtn.Text = "Sửa";
+                    deleteBtn.Enabled = true;
                     return;
                 }
 
@@ -322,6 +326,7 @@ namespace AppTracNghiem
                         "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     editBtn.Enabled = true;
                     editBtn.Text = "Sửa";
+                    deleteBtn.Enabled = true;
                     return;
                 }
 
@@ -333,6 +338,7 @@ namespace AppTracNghiem
                         "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     editBtn.Enabled = true;
                     editBtn.Text = "Sửa";
+                    deleteBtn.Enabled = true;
                     return;
                 }
 
@@ -342,6 +348,7 @@ namespace AppTracNghiem
                     _openEditForms.Remove(contest.Id);
                     editBtn.Enabled = true;
                     editBtn.Text = "Sửa";
+                    deleteBtn.Enabled = true;
                     _ = LoadContests();
                 };
                 
@@ -354,6 +361,7 @@ namespace AppTracNghiem
                     "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 editBtn.Enabled = true;
                 editBtn.Text = "Sửa";
+                deleteBtn.Enabled = true;
             }
         }
 
