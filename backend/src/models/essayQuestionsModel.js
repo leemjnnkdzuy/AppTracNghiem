@@ -11,29 +11,11 @@ const essayQuestionSchema = new mongoose.Schema(
 			type: String,
 			trim: true,
 		},
-		gradingCriteria: {
-			type: String,
-			trim: true,
-		},
-		maxLength: {
-			type: Number,
-			default: 1000, // Số ký tự tối đa
-		},
-		minLength: {
-			type: Number,
-			default: 50,
-		},
 		difficulty: {
 			type: String,
 			enum: ["easy", "medium", "hard"],
 			default: "medium",
 		},
-		keywords: [
-			{
-				type: String,
-				trim: true,
-			},
-		], // Từ khóa quan trọng cần có trong câu trả lời
 		createdBy: {
 			type: mongoose.Schema.Types.ObjectId,
 			ref: "User",

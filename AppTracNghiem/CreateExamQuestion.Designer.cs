@@ -43,17 +43,23 @@
             parrotPictureBox2 = new ReaLTaiizor.Controls.ParrotPictureBox();
             label4 = new Label();
             materialButton1 = new ReaLTaiizor.Controls.MaterialButton();
-            materialButton3 = new ReaLTaiizor.Controls.MaterialButton();
-            dungeonNumeric1 = new ReaLTaiizor.Controls.DungeonNumeric();
-            label5 = new Label();
             label7 = new Label();
             dungeonNumeric2 = new ReaLTaiizor.Controls.DungeonNumeric();
-            label8 = new Label();
             label9 = new Label();
+            label8 = new Label();
+            dungeonNumeric1 = new ReaLTaiizor.Controls.DungeonNumeric();
+            materialTextBoxEdit1 = new ReaLTaiizor.Controls.MaterialTextBoxEdit();
+            materialTextBoxEdit2 = new ReaLTaiizor.Controls.MaterialTextBoxEdit();
+            label11 = new Label();
+            label12 = new Label();
+            hopeGroupBox4 = new ReaLTaiizor.Controls.HopeGroupBox();
             label10 = new Label();
+            label5 = new Label();
+            label13 = new Label();
             hopeGroupBox3.SuspendLayout();
             hopeGroupBox1.SuspendLayout();
             hopeGroupBox2.SuspendLayout();
+            hopeGroupBox4.SuspendLayout();
             SuspendLayout();
             // 
             // hopeGroupBox3
@@ -130,7 +136,7 @@
             // 
             label3.AutoSize = true;
             label3.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
-            label3.Location = new Point(12, 301);
+            label3.Location = new Point(12, 241);
             label3.Name = "label3";
             label3.Size = new Size(142, 25);
             label3.TabIndex = 30;
@@ -144,10 +150,10 @@
             hopeGroupBox1.Font = new Font("Segoe UI", 12F);
             hopeGroupBox1.ForeColor = Color.FromArgb(48, 49, 51);
             hopeGroupBox1.LineColor = Color.FromArgb(220, 223, 230);
-            hopeGroupBox1.Location = new Point(12, 329);
+            hopeGroupBox1.Location = new Point(12, 269);
             hopeGroupBox1.Name = "hopeGroupBox1";
             hopeGroupBox1.ShowText = false;
-            hopeGroupBox1.Size = new Size(358, 84);
+            hopeGroupBox1.Size = new Size(358, 55);
             hopeGroupBox1.TabIndex = 31;
             hopeGroupBox1.TabStop = false;
             hopeGroupBox1.Text = "hopeGroupBox1";
@@ -157,7 +163,7 @@
             // 
             materialRadioButton7.AutoSize = true;
             materialRadioButton7.Depth = 0;
-            materialRadioButton7.Location = new Point(217, 25);
+            materialRadioButton7.Location = new Point(231, 10);
             materialRadioButton7.Margin = new Padding(0);
             materialRadioButton7.MouseLocation = new Point(-1, -1);
             materialRadioButton7.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.HOVER;
@@ -169,14 +175,13 @@
             materialRadioButton7.Text = "Gemini ";
             materialRadioButton7.UseAccentColor = false;
             materialRadioButton7.UseVisualStyleBackColor = true;
-            materialRadioButton7.CheckedChanged += materialRadioButton7_CheckedChanged;
             // 
             // materialRadioButton8
             // 
             materialRadioButton8.AutoSize = true;
             materialRadioButton8.Depth = 0;
             materialRadioButton8.ImageKey = "(none)";
-            materialRadioButton8.Location = new Point(28, 25);
+            materialRadioButton8.Location = new Point(23, 10);
             materialRadioButton8.Margin = new Padding(0);
             materialRadioButton8.MouseLocation = new Point(-1, -1);
             materialRadioButton8.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.HOVER;
@@ -198,7 +203,7 @@
             materialButton2.HighEmphasis = true;
             materialButton2.Icon = (Image)resources.GetObject("materialButton2.Icon");
             materialButton2.IconType = ReaLTaiizor.Controls.MaterialButton.MaterialIconType.Rebase;
-            materialButton2.Location = new Point(12, 432);
+            materialButton2.Location = new Point(12, 441);
             materialButton2.Margin = new Padding(4, 6, 4, 6);
             materialButton2.MinimumSize = new Size(358, 48);
             materialButton2.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.HOVER;
@@ -222,7 +227,7 @@
             hopeGroupBox2.Location = new Point(391, 60);
             hopeGroupBox2.Name = "hopeGroupBox2";
             hopeGroupBox2.ShowText = false;
-            hopeGroupBox2.Size = new Size(861, 577);
+            hopeGroupBox2.Size = new Size(861, 624);
             hopeGroupBox2.TabIndex = 34;
             hopeGroupBox2.TabStop = false;
             hopeGroupBox2.Text = "hopeGroupBox2";
@@ -262,6 +267,7 @@
             // materialButton1
             // 
             materialButton1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            materialButton1.Cursor = Cursors.Hand;
             materialButton1.Density = ReaLTaiizor.Controls.MaterialButton.MaterialButtonDensity.Default;
             materialButton1.Depth = 0;
             materialButton1.HighEmphasis = true;
@@ -279,58 +285,6 @@
             materialButton1.Type = ReaLTaiizor.Controls.MaterialButton.MaterialButtonType.Contained;
             materialButton1.UseAccentColor = false;
             materialButton1.UseVisualStyleBackColor = true;
-            // 
-            // materialButton3
-            // 
-            materialButton3.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            materialButton3.Density = ReaLTaiizor.Controls.MaterialButton.MaterialButtonDensity.Default;
-            materialButton3.Depth = 0;
-            materialButton3.HighEmphasis = true;
-            materialButton3.Icon = (Image)resources.GetObject("materialButton3.Icon");
-            materialButton3.IconType = ReaLTaiizor.Controls.MaterialButton.MaterialIconType.Rebase;
-            materialButton3.Location = new Point(923, 15);
-            materialButton3.Margin = new Padding(4, 6, 4, 6);
-            materialButton3.MinimumSize = new Size(160, 0);
-            materialButton3.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.HOVER;
-            materialButton3.Name = "materialButton3";
-            materialButton3.NoAccentTextColor = Color.Empty;
-            materialButton3.Size = new Size(160, 36);
-            materialButton3.TabIndex = 36;
-            materialButton3.Text = "Lưu";
-            materialButton3.Type = ReaLTaiizor.Controls.MaterialButton.MaterialButtonType.Contained;
-            materialButton3.UseAccentColor = false;
-            materialButton3.UseVisualStyleBackColor = true;
-            // 
-            // dungeonNumeric1
-            // 
-            dungeonNumeric1.BackColor = Color.Transparent;
-            dungeonNumeric1.BackColorA = Color.FromArgb(246, 246, 246);
-            dungeonNumeric1.BackColorB = Color.FromArgb(254, 254, 254);
-            dungeonNumeric1.BorderColor = Color.FromArgb(180, 180, 180);
-            dungeonNumeric1.ButtonForeColorA = Color.FromArgb(75, 75, 75);
-            dungeonNumeric1.ButtonForeColorB = Color.FromArgb(75, 75, 75);
-            dungeonNumeric1.Font = new Font("Tahoma", 11F);
-            dungeonNumeric1.ForeColor = Color.FromArgb(76, 76, 76);
-            dungeonNumeric1.Location = new Point(12, 535);
-            dungeonNumeric1.Maximum = 1000000L;
-            dungeonNumeric1.Minimum = 1L;
-            dungeonNumeric1.MinimumSize = new Size(93, 28);
-            dungeonNumeric1.Name = "dungeonNumeric1";
-            dungeonNumeric1.Size = new Size(358, 28);
-            dungeonNumeric1.TabIndex = 37;
-            dungeonNumeric1.Text = "dungeonNumeric1";
-            dungeonNumeric1.TextAlignment = ReaLTaiizor.Controls.DungeonNumeric._TextAlignment.Near;
-            dungeonNumeric1.Value = 1L;
-            // 
-            // label5
-            // 
-            label5.AutoSize = true;
-            label5.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
-            label5.Location = new Point(12, 507);
-            label5.Name = "label5";
-            label5.Size = new Size(255, 25);
-            label5.TabIndex = 38;
-            label5.Text = "Số Lượng Câu Trắc Nghiệm";
             // 
             // label7
             // 
@@ -351,67 +305,210 @@
             dungeonNumeric2.ButtonForeColorB = Color.FromArgb(75, 75, 75);
             dungeonNumeric2.Font = new Font("Tahoma", 11F);
             dungeonNumeric2.ForeColor = Color.FromArgb(76, 76, 76);
-            dungeonNumeric2.Location = new Point(12, 605);
+            dungeonNumeric2.Location = new Point(217, 90);
             dungeonNumeric2.Maximum = 1000000L;
-            dungeonNumeric2.Minimum = 1L;
+            dungeonNumeric2.Minimum = 0L;
             dungeonNumeric2.MinimumSize = new Size(93, 28);
             dungeonNumeric2.Name = "dungeonNumeric2";
-            dungeonNumeric2.Size = new Size(358, 28);
+            dungeonNumeric2.Size = new Size(135, 28);
             dungeonNumeric2.TabIndex = 39;
             dungeonNumeric2.Text = "dungeonNumeric2";
             dungeonNumeric2.TextAlignment = ReaLTaiizor.Controls.DungeonNumeric._TextAlignment.Near;
             dungeonNumeric2.Value = 1L;
-            // 
-            // label8
-            // 
-            label8.AutoSize = true;
-            label8.Font = new Font("Segoe UI", 9F);
-            label8.Location = new Point(333, 515);
-            label8.Name = "label8";
-            label8.Size = new Size(37, 15);
-            label8.TabIndex = 29;
-            label8.Text = "0 Câu";
+            dungeonNumeric2.Click += dungeonNumeric2_Click;
             // 
             // label9
             // 
             label9.AutoSize = true;
             label9.Font = new Font("Segoe UI", 9F);
-            label9.Location = new Point(333, 585);
+            label9.Location = new Point(315, 68);
             label9.Name = "label9";
             label9.Size = new Size(37, 15);
             label9.TabIndex = 41;
             label9.Text = "0 Câu";
             // 
+            // label8
+            // 
+            label8.AutoSize = true;
+            label8.Font = new Font("Segoe UI", 9F);
+            label8.Location = new Point(315, 9);
+            label8.Name = "label8";
+            label8.Size = new Size(37, 15);
+            label8.TabIndex = 29;
+            label8.Text = "0 Câu";
+            // 
+            // dungeonNumeric1
+            // 
+            dungeonNumeric1.BackColor = Color.Transparent;
+            dungeonNumeric1.BackColorA = Color.FromArgb(246, 246, 246);
+            dungeonNumeric1.BackColorB = Color.FromArgb(254, 254, 254);
+            dungeonNumeric1.BorderColor = Color.FromArgb(180, 180, 180);
+            dungeonNumeric1.ButtonForeColorA = Color.FromArgb(75, 75, 75);
+            dungeonNumeric1.ButtonForeColorB = Color.FromArgb(75, 75, 75);
+            dungeonNumeric1.Font = new Font("Tahoma", 11F);
+            dungeonNumeric1.ForeColor = Color.FromArgb(76, 76, 76);
+            dungeonNumeric1.Location = new Point(217, 29);
+            dungeonNumeric1.Maximum = 1000000L;
+            dungeonNumeric1.Minimum = 0L;
+            dungeonNumeric1.MinimumSize = new Size(93, 28);
+            dungeonNumeric1.Name = "dungeonNumeric1";
+            dungeonNumeric1.Size = new Size(135, 28);
+            dungeonNumeric1.TabIndex = 37;
+            dungeonNumeric1.Text = "dungeonNumeric1";
+            dungeonNumeric1.TextAlignment = ReaLTaiizor.Controls.DungeonNumeric._TextAlignment.Near;
+            dungeonNumeric1.Value = 1L;
+            dungeonNumeric1.Click += dungeonNumeric1_Click;
+            // 
+            // materialTextBoxEdit1
+            // 
+            materialTextBoxEdit1.AnimateReadOnly = false;
+            materialTextBoxEdit1.AutoCompleteMode = AutoCompleteMode.None;
+            materialTextBoxEdit1.AutoCompleteSource = AutoCompleteSource.None;
+            materialTextBoxEdit1.BackgroundImageLayout = ImageLayout.None;
+            materialTextBoxEdit1.CharacterCasing = CharacterCasing.Normal;
+            materialTextBoxEdit1.Depth = 0;
+            materialTextBoxEdit1.Font = new Font("Microsoft Sans Serif", 16F, FontStyle.Regular, GraphicsUnit.Pixel);
+            materialTextBoxEdit1.HideSelection = true;
+            materialTextBoxEdit1.LeadingIcon = null;
+            materialTextBoxEdit1.Location = new Point(229, 384);
+            materialTextBoxEdit1.MaxLength = 32767;
+            materialTextBoxEdit1.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.OUT;
+            materialTextBoxEdit1.Name = "materialTextBoxEdit1";
+            materialTextBoxEdit1.PasswordChar = '\0';
+            materialTextBoxEdit1.PrefixSuffixText = null;
+            materialTextBoxEdit1.ReadOnly = false;
+            materialTextBoxEdit1.RightToLeft = RightToLeft.No;
+            materialTextBoxEdit1.SelectedText = "";
+            materialTextBoxEdit1.SelectionLength = 0;
+            materialTextBoxEdit1.SelectionStart = 0;
+            materialTextBoxEdit1.ShortcutsEnabled = true;
+            materialTextBoxEdit1.Size = new Size(141, 48);
+            materialTextBoxEdit1.TabIndex = 50;
+            materialTextBoxEdit1.TabStop = false;
+            materialTextBoxEdit1.TextAlign = HorizontalAlignment.Left;
+            materialTextBoxEdit1.TrailingIcon = null;
+            materialTextBoxEdit1.UseSystemPasswordChar = false;
+            // 
+            // materialTextBoxEdit2
+            // 
+            materialTextBoxEdit2.AnimateReadOnly = false;
+            materialTextBoxEdit2.AutoCompleteMode = AutoCompleteMode.None;
+            materialTextBoxEdit2.AutoCompleteSource = AutoCompleteSource.None;
+            materialTextBoxEdit2.BackgroundImageLayout = ImageLayout.None;
+            materialTextBoxEdit2.CharacterCasing = CharacterCasing.Normal;
+            materialTextBoxEdit2.Depth = 0;
+            materialTextBoxEdit2.Font = new Font("Microsoft Sans Serif", 16F, FontStyle.Regular, GraphicsUnit.Pixel);
+            materialTextBoxEdit2.HideSelection = true;
+            materialTextBoxEdit2.LeadingIcon = null;
+            materialTextBoxEdit2.Location = new Point(229, 330);
+            materialTextBoxEdit2.MaxLength = 32767;
+            materialTextBoxEdit2.MouseState = ReaLTaiizor.Helper.MaterialDrawHelper.MaterialMouseState.OUT;
+            materialTextBoxEdit2.Name = "materialTextBoxEdit2";
+            materialTextBoxEdit2.PasswordChar = '\0';
+            materialTextBoxEdit2.PrefixSuffixText = null;
+            materialTextBoxEdit2.ReadOnly = false;
+            materialTextBoxEdit2.RightToLeft = RightToLeft.No;
+            materialTextBoxEdit2.SelectedText = "";
+            materialTextBoxEdit2.SelectionLength = 0;
+            materialTextBoxEdit2.SelectionStart = 0;
+            materialTextBoxEdit2.ShortcutsEnabled = true;
+            materialTextBoxEdit2.Size = new Size(141, 48);
+            materialTextBoxEdit2.TabIndex = 49;
+            materialTextBoxEdit2.TabStop = false;
+            materialTextBoxEdit2.TextAlign = HorizontalAlignment.Left;
+            materialTextBoxEdit2.TrailingIcon = null;
+            materialTextBoxEdit2.UseSystemPasswordChar = false;
+            // 
+            // label11
+            // 
+            label11.AutoSize = true;
+            label11.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label11.Location = new Point(12, 398);
+            label11.Name = "label11";
+            label11.Size = new Size(167, 21);
+            label11.TabIndex = 48;
+            label11.Text = "Số Lượng Câu Tự Luận";
+            // 
+            // label12
+            // 
+            label12.AutoSize = true;
+            label12.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label12.Location = new Point(12, 345);
+            label12.Name = "label12";
+            label12.Size = new Size(200, 21);
+            label12.TabIndex = 47;
+            label12.Text = "Số Lượng Câu Trắc Nghiệm";
+            // 
+            // hopeGroupBox4
+            // 
+            hopeGroupBox4.BorderColor = Color.FromArgb(220, 223, 230);
+            hopeGroupBox4.Controls.Add(label10);
+            hopeGroupBox4.Controls.Add(label5);
+            hopeGroupBox4.Controls.Add(dungeonNumeric1);
+            hopeGroupBox4.Controls.Add(dungeonNumeric2);
+            hopeGroupBox4.Controls.Add(label8);
+            hopeGroupBox4.Controls.Add(label9);
+            hopeGroupBox4.Font = new Font("Segoe UI", 12F);
+            hopeGroupBox4.ForeColor = Color.FromArgb(48, 49, 51);
+            hopeGroupBox4.LineColor = Color.FromArgb(220, 223, 230);
+            hopeGroupBox4.Location = new Point(12, 551);
+            hopeGroupBox4.Name = "hopeGroupBox4";
+            hopeGroupBox4.ShowText = false;
+            hopeGroupBox4.Size = new Size(358, 133);
+            hopeGroupBox4.TabIndex = 51;
+            hopeGroupBox4.TabStop = false;
+            hopeGroupBox4.Text = "hopeGroupBox4";
+            hopeGroupBox4.ThemeColor = Color.Transparent;
+            // 
             // label10
             // 
             label10.AutoSize = true;
-            label10.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
-            label10.Location = new Point(12, 575);
+            label10.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label10.Location = new Point(7, 93);
             label10.Name = "label10";
-            label10.Size = new Size(216, 25);
-            label10.TabIndex = 42;
+            label10.Size = new Size(167, 21);
+            label10.TabIndex = 52;
             label10.Text = "Số Lượng Câu Tự Luận";
+            // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label5.Location = new Point(7, 32);
+            label5.Name = "label5";
+            label5.Size = new Size(200, 21);
+            label5.TabIndex = 48;
+            label5.Text = "Số Lượng Câu Trắc Nghiệm";
+            // 
+            // label13
+            // 
+            label13.AutoSize = true;
+            label13.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
+            label13.Location = new Point(12, 523);
+            label13.Name = "label13";
+            label13.Size = new Size(263, 25);
+            label13.TabIndex = 52;
+            label13.Text = "Số Lượng Câu Hỏi Trong Đề";
             // 
             // CreateExamQuestion
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1264, 649);
-            Controls.Add(label10);
-            Controls.Add(label9);
-            Controls.Add(label8);
+            ClientSize = new Size(1264, 696);
+            Controls.Add(label13);
+            Controls.Add(materialTextBoxEdit1);
+            Controls.Add(materialTextBoxEdit2);
+            Controls.Add(materialButton2);
+            Controls.Add(label11);
+            Controls.Add(label12);
             Controls.Add(label7);
-            Controls.Add(dungeonNumeric2);
-            Controls.Add(label5);
-            Controls.Add(dungeonNumeric1);
-            Controls.Add(materialButton3);
             Controls.Add(materialButton1);
             Controls.Add(hopeGroupBox2);
-            Controls.Add(materialButton2);
             Controls.Add(hopeGroupBox1);
             Controls.Add(label3);
             Controls.Add(label6);
             Controls.Add(hopeGroupBox3);
+            Controls.Add(hopeGroupBox4);
             Name = "CreateExamQuestion";
             hopeGroupBox3.ResumeLayout(false);
             hopeGroupBox3.PerformLayout();
@@ -419,6 +516,8 @@
             hopeGroupBox1.PerformLayout();
             hopeGroupBox2.ResumeLayout(false);
             hopeGroupBox2.PerformLayout();
+            hopeGroupBox4.ResumeLayout(false);
+            hopeGroupBox4.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -439,13 +538,18 @@
         private ReaLTaiizor.Controls.ParrotPictureBox parrotPictureBox2;
         private Label label4;
         private ReaLTaiizor.Controls.MaterialButton materialButton1;
-        private ReaLTaiizor.Controls.MaterialButton materialButton3;
-        private ReaLTaiizor.Controls.DungeonNumeric dungeonNumeric1;
-        private Label label5;
         private Label label7;
         private ReaLTaiizor.Controls.DungeonNumeric dungeonNumeric2;
-        private Label label8;
         private Label label9;
+        private Label label8;
+        private ReaLTaiizor.Controls.DungeonNumeric dungeonNumeric1;
+        private ReaLTaiizor.Controls.MaterialTextBoxEdit materialTextBoxEdit1;
+        private ReaLTaiizor.Controls.MaterialTextBoxEdit materialTextBoxEdit2;
+        private Label label11;
+        private Label label12;
+        private ReaLTaiizor.Controls.HopeGroupBox hopeGroupBox4;
+        private Label label5;
         private Label label10;
+        private Label label13;
     }
 }

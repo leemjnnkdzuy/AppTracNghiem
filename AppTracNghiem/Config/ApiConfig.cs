@@ -12,7 +12,8 @@ namespace AppTracNghiem.Config
 
         // Contest
         public const string UploadDocumentEndpoint = "/api/contest/upload-document";
-        public const string GenerateQuestionsEndpoint = "/api/contest/generate-questions";
+        public const string GenerateQuestionBankEndpoint = "/api/contest/generate-question-bank";
+        public const string AddQuestionsToContestEndpoint = "/api/contest/add-questions";
         public const string GetQuestionsByContestEndpoint = "/api/contest/questions";
 
         public static string GetFullUrl(string endpoint)

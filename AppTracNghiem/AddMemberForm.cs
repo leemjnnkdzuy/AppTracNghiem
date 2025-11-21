@@ -16,17 +16,17 @@ namespace AppTracNghiem
     public partial class AddMemberForm : Form
     {
         private readonly ContestService _contestService;
-        private UserModel _currentSearchedUser;
+        private UserModel? _currentSearchedUser;
         private string _contestId;
 
         public AddMemberForm(string contestId = "")
         {
-            InitializeComponent();
+			InitializeComponent();
             _contestService = new ContestService();
             _contestId = contestId;
         }
 
-        public UserModel GetSelectedUser()
+        public UserModel? GetSelectedUser()
         {
             return _currentSearchedUser;
         }

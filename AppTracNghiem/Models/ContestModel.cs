@@ -8,13 +8,13 @@ namespace AppTracNghiem.Models
     public class ContestModel
     {
         [JsonProperty("_id")]
-        public string Id { get; set; }
+        public string? Id { get; set; }
         
         [JsonProperty("title")]
-        public string Title { get; set; }
+        public string? Title { get; set; }
         
         [JsonProperty("description")]
-        public string Description { get; set; }
+        public string? Description { get; set; }
         
         [JsonProperty("startDate")]
         public DateTime StartDate { get; set; }
@@ -60,6 +60,12 @@ namespace AppTracNghiem.Models
         
         [JsonProperty("maxAttempts")]
         public int? MaxAttempts { get; set; }
+        
+        [JsonProperty("countMultipleChoiceQuestions")]
+        public int CountMultipleChoiceQuestions { get; set; }
+        
+        [JsonProperty("countEssayQuestions")]
+        public int CountEssayQuestions { get; set; }
         
         [JsonProperty("members")]
         public List<ContestMemberModel> Members { get; set; }

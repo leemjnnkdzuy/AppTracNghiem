@@ -223,17 +223,29 @@ namespace AppTracNghiem
             };
             card.Controls.Add(dateLabel);
 
+            var questionsLabel = new Label
+            {
+                Text = $"TN: {contest.CountMultipleChoiceQuestions} | TL: {contest.CountEssayQuestions}",
+                Font = new Font("Segoe UI", 9F, FontStyle.Bold),
+                ForeColor = Color.White,
+                BackColor = Color.FromArgb(0, 150, 136),
+                Location = new Point(425, 45),
+                Size = new Size(120, 25),
+                TextAlign = ContentAlignment.MiddleCenter
+            };
+            card.Controls.Add(questionsLabel);
+
             var editBtn = new ReaLTaiizor.Controls.MaterialButton
             {
                 Icon = Image.FromFile(Path.Combine(Application.StartupPath, "Assets", "edit-alt.png")),
                 IconType = ReaLTaiizor.Controls.MaterialButton.MaterialIconType.Rebase,
                 Text = "Sửa",
-                Location = new Point(850, 20),
-                MinimumSize = new Size(100, 36),
+                Location = new Point(810, 20),
+                MinimumSize = new Size(120, 36),
                 Cursor = Cursors.Hand,
                 Type = ReaLTaiizor.Controls.MaterialButton.MaterialButtonType.Contained
             };
-            editBtn.Click += (s, e) => EditContest(contest);
+            editBtn.Click += (s, e) => EditContest(contest, editBtn);
             card.Controls.Add(editBtn);
 
             var deleteBtn = new ReaLTaiizor.Controls.MaterialButton
@@ -241,8 +253,8 @@ namespace AppTracNghiem
                 Icon = Image.FromFile(Path.Combine(Application.StartupPath, "Assets", "trash.png")),
                 IconType = ReaLTaiizor.Controls.MaterialButton.MaterialIconType.Rebase,
                 Text = "Xóa",
-                Location = new Point(960, 20),
-                MinimumSize = new Size(100, 36),
+                Location = new Point(940, 20),
+                MinimumSize = new Size(120, 36),
                 Cursor = Cursors.Hand,
                 Type = ReaLTaiizor.Controls.MaterialButton.MaterialButtonType.Contained
             };
@@ -276,11 +288,12 @@ namespace AppTracNghiem
             };
         }
 
-        private async void EditContest(ContestModel contest)
+        private async void EditContest(ContestModel contest, ReaLTaiizor.Controls.MaterialButton editBtn)
         {
             try
             {
-                if (_openEditForms.ContainsKey(contest.Id) && 
+                if (!string.IsNullOrEmpty(contest.Id) &&
+                    _openEditForms.ContainsKey(contest.Id) && 
                     _openEditForms[contest.Id] != null && 
                     !_openEditForms[contest.Id].IsDisposed)
                 {
@@ -289,11 +302,26 @@ namespace AppTracNghiem
                     return;
                 }
 
+                editBtn.Enabled = false;
+                editBtn.Text = "Đang mở...";
+                editBtn.Icon = null;
+
                 var tokenData = TokenManager.GetTokenData();
                 if (tokenData == null)
                 {
                     MessageBox.Show("Vui lòng đăng nhập lại!", 
                         "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    editBtn.Enabled = true;
+                    editBtn.Text = "Sửa";
+                    return;
+                }
+
+                if (string.IsNullOrEmpty(contest.Id))
+                {
+                    MessageBox.Show("ID đề thi không hợp lệ!", 
+                        "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    editBtn.Enabled = true;
+                    editBtn.Text = "Sửa";
                     return;
                 }
 
@@ -303,6 +331,8 @@ namespace AppTracNghiem
                 {
                     MessageBox.Show("Không thể tải dữ liệu đề thi!", 
                         "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    editBtn.Enabled = true;
+                    editBtn.Text = "Sửa";
                     return;
                 }
 
@@ -310,6 +340,8 @@ namespace AppTracNghiem
                 editForm.FormClosed += (s, args) => 
                 {
                     _openEditForms.Remove(contest.Id);
+                    editBtn.Enabled = true;
+                    editBtn.Text = "Sửa";
                     _ = LoadContests();
                 };
                 
@@ -320,6 +352,8 @@ namespace AppTracNghiem
             {
                 MessageBox.Show($"Lỗi khi tải đề thi: {ex.Message}", 
                     "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                editBtn.Enabled = true;
+                editBtn.Text = "Sửa";
             }
         }
 
@@ -339,6 +373,13 @@ namespace AppTracNghiem
                     if (tokenData == null)
                     {
                         MessageBox.Show("Vui lòng đăng nhập lại!", 
+                            "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    if (string.IsNullOrEmpty(contest.Id))
+                    {
+                        MessageBox.Show("ID đề thi không hợp lệ!", 
                             "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }

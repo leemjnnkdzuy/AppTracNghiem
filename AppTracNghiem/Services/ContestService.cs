@@ -11,9 +11,10 @@ using AppTracNghiem.Helpers;
 
 namespace AppTracNghiem.Services
 {
-    public class ContestService
+    public class ContestService : IDisposable
     {
         private readonly HttpClient _httpClient;
+        private bool _disposed = false;
 
         public ContestService()
         {
@@ -24,10 +25,22 @@ namespace AppTracNghiem.Services
             _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
 
+        private void CheckDisposed()
+        {
+            if (_disposed)
+            {
+                throw new ObjectDisposedException(nameof(ContestService));
+            }
+        }
+
         public async Task<string> UploadDocumentAsync(string filePath, string accessToken)
         {
+            CheckDisposed();
             try
             {
+                Console.WriteLine($"[UploadDocumentAsync] Starting upload for file: {filePath}");
+                Console.WriteLine($"[UploadDocumentAsync] Endpoint: {ApiConfig.UploadDocumentEndpoint}");
+                
                 _httpClient.DefaultRequestHeaders.Authorization =
                     new AuthenticationHeaderValue("Bearer", accessToken);
 
@@ -37,8 +50,14 @@ namespace AppTracNghiem.Services
                     fileContent.Headers.ContentType = MediaTypeHeaderValue.Parse(GetContentType(filePath));
                     content.Add(fileContent, "document", Path.GetFileName(filePath));
 
+                    Console.WriteLine($"[UploadDocumentAsync] Content-Type: {GetContentType(filePath)}");
+                    Console.WriteLine($"[UploadDocumentAsync] File name: {Path.GetFileName(filePath)}");
+
                     var response = await _httpClient.PostAsync(ApiConfig.UploadDocumentEndpoint, content);
                     var responseContent = await response.Content.ReadAsStringAsync();
+
+                    Console.WriteLine($"[UploadDocumentAsync] Response status: {response.StatusCode}");
+                    Console.WriteLine($"[UploadDocumentAsync] Response body: {responseContent}");
 
                     if (response.IsSuccessStatusCode)
                     {
@@ -47,12 +66,14 @@ namespace AppTracNghiem.Services
                     }
                     else
                     {
-                        throw new Exception($"Lỗi upload file: {response.StatusCode}");
+                        throw new Exception($"Lỗi upload file: {response.StatusCode} - {responseContent}");
                     }
                 }
             }
             catch (Exception ex)
             {
+                Console.WriteLine($"[UploadDocumentAsync] Exception: {ex.Message}");
+                Console.WriteLine($"[UploadDocumentAsync] StackTrace: {ex.StackTrace}");
                 throw new Exception($"Lỗi khi upload tài liệu: {ex.Message}");
             }
         }
@@ -61,32 +82,57 @@ namespace AppTracNghiem.Services
             GenerateQuestionsRequest request, 
             string accessToken)
         {
+            CheckDisposed();
             try
             {
+                Console.WriteLine("[ContestService] GenerateQuestionsAsync - Start");
+                Console.WriteLine($"[ContestService] Request - DocumentContent length: {request.DocumentContent?.Length ?? 0}");
+                Console.WriteLine($"[ContestService] Request - AiModel: {request.AiModel}");
+                Console.WriteLine($"[ContestService] Request - NumMultipleChoice: {request.NumMultipleChoice}");
+                Console.WriteLine($"[ContestService] Request - NumEssay: {request.NumEssay}");
+                Console.WriteLine($"[ContestService] Request - ContestId: {request.ContestId}");
+
                 _httpClient.DefaultRequestHeaders.Authorization =
                     new AuthenticationHeaderValue("Bearer", accessToken);
 
                 var json = JsonConvert.SerializeObject(request);
+                Console.WriteLine($"[ContestService] Request JSON: {json}");
+                
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                var response = await _httpClient.PostAsync(ApiConfig.GenerateQuestionsEndpoint, content);
+                var url = ApiConfig.GenerateQuestionBankEndpoint;
+                Console.WriteLine($"[ContestService] Calling URL: {url}");
+
+                var response = await _httpClient.PostAsync(url, content);
                 var responseContent = await response.Content.ReadAsStringAsync();
+
+                Console.WriteLine($"[ContestService] Response Status: {response.StatusCode}");
+                Console.WriteLine($"[ContestService] Response Content: {responseContent}");
 
                 if (response.IsSuccessStatusCode)
                 {
-                    return JsonConvert.DeserializeObject<GenerateQuestionsResponse>(responseContent);
+                    var result = JsonConvert.DeserializeObject<GenerateQuestionsResponse>(responseContent);
+                    Console.WriteLine($"[ContestService] Deserialization Success: {result?.Success}");
+                    return result;
                 }
                 else
                 {
+                    Console.WriteLine($"[ContestService] Request failed with status: {response.StatusCode}");
                     return new GenerateQuestionsResponse
                     {
                         Success = false,
-                        Message = $"Lỗi: {response.StatusCode}"
+                        Message = $"Lỗi: {response.StatusCode} - {responseContent}"
                     };
                 }
             }
             catch (Exception ex)
             {
+                Console.WriteLine($"[ContestService] Exception: {ex.Message}");
+                Console.WriteLine($"[ContestService] StackTrace: {ex.StackTrace}");
+                if (ex.InnerException != null)
+                {
+                    Console.WriteLine($"[ContestService] InnerException: {ex.InnerException.Message}");
+                }
                 return new GenerateQuestionsResponse
                 {
                     Success = false,
@@ -95,25 +141,109 @@ namespace AppTracNghiem.Services
             }
         }
 
+        public async Task<bool> AddQuestionsToContestAsync(
+            string contestId,
+            MultipleChoiceQuestionModel[] multipleChoiceQuestions,
+            EssayQuestionModel[] essayQuestions,
+            string accessToken)
+        {
+            CheckDisposed();
+            try
+            {
+                Console.WriteLine("[ContestService] AddQuestionsToContestAsync - Start");
+                Console.WriteLine($"[ContestService] ContestId: {contestId}");
+                Console.WriteLine($"[ContestService] Multiple Choice Questions: {multipleChoiceQuestions?.Length ?? 0}");
+                Console.WriteLine($"[ContestService] Essay Questions: {essayQuestions?.Length ?? 0}");
+
+                _httpClient.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue("Bearer", accessToken);
+
+                var request = new
+                {
+                    contestId = contestId,
+                    multipleChoiceQuestions = multipleChoiceQuestions,
+                    essayQuestions = essayQuestions
+                };
+
+                var json = JsonConvert.SerializeObject(request);
+                Console.WriteLine($"[ContestService] Request JSON length: {json.Length}");
+
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                var url = ApiConfig.AddQuestionsToContestEndpoint;
+                Console.WriteLine($"[ContestService] Calling URL: {url}");
+
+                var response = await _httpClient.PostAsync(url, content);
+                var responseContent = await response.Content.ReadAsStringAsync();
+
+                Console.WriteLine($"[ContestService] Response Status: {response.StatusCode}");
+                Console.WriteLine($"[ContestService] Response Content: {responseContent}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    Console.WriteLine("[ContestService] Questions added successfully");
+                    return true;
+                }
+                else
+                {
+                    Console.WriteLine($"[ContestService] Failed: {response.StatusCode}");
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[ContestService] Exception: {ex.Message}");
+                Console.WriteLine($"[ContestService] Stack trace: {ex.StackTrace}");
+                throw new Exception($"Lỗi khi thêm câu hỏi vào contest: {ex.Message}");
+            }
+        }
+
         public async Task<QuestionsListResponse> GetQuestionsByContestAsync(
             string contestId, 
             string accessToken)
         {
+            CheckDisposed();
             try
             {
+                Console.WriteLine("\n========== [GetQuestionsByContestAsync] BẮT ĐẦU ==========\n");
+                Console.WriteLine($"[GetQuestionsByContestAsync] 📋 ContestId: {contestId}");
+                Console.WriteLine($"[GetQuestionsByContestAsync] 🔑 Token: {accessToken?.Substring(0, 20)}...");
+
                 _httpClient.DefaultRequestHeaders.Authorization =
                     new AuthenticationHeaderValue("Bearer", accessToken);
 
-                var response = await _httpClient.GetAsync(
-                    ApiConfig.GetFullUrl($"/api/contest/questions/{contestId}"));
+                var url = ApiConfig.GetFullUrl($"/api/contest/questions/{contestId}");
+                Console.WriteLine($"[GetQuestionsByContestAsync] 🌐 URL: {url}");
+
+                var response = await _httpClient.GetAsync(url);
                 var responseContent = await response.Content.ReadAsStringAsync();
+
+                Console.WriteLine($"[GetQuestionsByContestAsync] 📡 Response Status: {response.StatusCode}");
+                Console.WriteLine($"[GetQuestionsByContestAsync] 📦 Response Content Length: {responseContent?.Length ?? 0}");
+                Console.WriteLine($"[GetQuestionsByContestAsync] 📄 Response Content:\n{responseContent}\n");
 
                 if (response.IsSuccessStatusCode)
                 {
-                    return JsonConvert.DeserializeObject<QuestionsListResponse>(responseContent);
+                    Console.WriteLine($"[GetQuestionsByContestAsync] ✓ Response successful, deserializing...");
+                    var result = JsonConvert.DeserializeObject<QuestionsListResponse>(responseContent);
+                    
+                    Console.WriteLine($"[GetQuestionsByContestAsync] 📊 Deserialized result:");
+                    Console.WriteLine($"   - Success: {result?.Success}");
+                    Console.WriteLine($"   - Message: {result?.Message}");
+                    Console.WriteLine($"   - Data null?: {result?.Data == null}");
+                    if (result?.Data != null)
+                    {
+                        Console.WriteLine($"   - MultipleChoice count: {result.Data.MultipleChoice?.Count ?? 0}");
+                        Console.WriteLine($"   - Essay count: {result.Data.Essay?.Count ?? 0}");
+                        Console.WriteLine($"   - Total: {result.Data.Total}");
+                    }
+                    
+                    Console.WriteLine("\n========== [GetQuestionsByContestAsync] KẾT THÚC - SUCCESS ==========\n");
+                    return result;
                 }
                 else
                 {
+                    Console.WriteLine($"[GetQuestionsByContestAsync] ❌ Response FAILED: {response.StatusCode}");
+                    Console.WriteLine("\n========== [GetQuestionsByContestAsync] KẾT THÚC - FAILED ==========\n");
                     return new QuestionsListResponse
                     {
                         Success = false,
@@ -123,6 +253,16 @@ namespace AppTracNghiem.Services
             }
             catch (Exception ex)
             {
+                Console.WriteLine($"\n[GetQuestionsByContestAsync] ❌❌❌ EXCEPTION ❌❌❌");
+                Console.WriteLine($"   Type: {ex.GetType().Name}");
+                Console.WriteLine($"   Message: {ex.Message}");
+                Console.WriteLine($"   StackTrace:\n{ex.StackTrace}");
+                if (ex.InnerException != null)
+                {
+                    Console.WriteLine($"   InnerException: {ex.InnerException.Message}");
+                }
+                Console.WriteLine("\n========================================\n");
+                
                 return new QuestionsListResponse
                 {
                     Success = false,
@@ -145,7 +285,7 @@ namespace AppTracNghiem.Services
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
                 var response = await _httpClient.PutAsync(
-                    ApiConfig.GetFullUrl($"/api/contest/multiple-choice/{questionId}"),
+                    ApiConfig.GetFullUrl($"/api/multiple-choice-question/{questionId}"),
                     content);
 
                 return response.IsSuccessStatusCode;
@@ -170,7 +310,7 @@ namespace AppTracNghiem.Services
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
                 var response = await _httpClient.PutAsync(
-                    ApiConfig.GetFullUrl($"/api/contest/essay/{questionId}"),
+                    ApiConfig.GetFullUrl($"/api/essay-question/{questionId}"),
                     content);
 
                 return response.IsSuccessStatusCode;
@@ -191,7 +331,7 @@ namespace AppTracNghiem.Services
                     new AuthenticationHeaderValue("Bearer", accessToken);
 
                 var response = await _httpClient.DeleteAsync(
-                    ApiConfig.GetFullUrl($"/api/contest/multiple-choice/{questionId}"));
+                    ApiConfig.GetFullUrl($"/api/multiple-choice-question/{questionId}"));
 
                 return response.IsSuccessStatusCode;
             }
@@ -211,7 +351,7 @@ namespace AppTracNghiem.Services
                     new AuthenticationHeaderValue("Bearer", accessToken);
 
                 var response = await _httpClient.DeleteAsync(
-                    ApiConfig.GetFullUrl($"/api/contest/essay/{questionId}"));
+                    ApiConfig.GetFullUrl($"/api/essay-question/{questionId}"));
 
                 return response.IsSuccessStatusCode;
             }
@@ -466,9 +606,7 @@ namespace AppTracNghiem.Services
             string visibility = null)
         {
             try
-            {
-                Console.WriteLine("[ContestService] GetAllContestsAsync - Start");
-                
+            {                
                 _httpClient.DefaultRequestHeaders.Authorization =
                     new AuthenticationHeaderValue("Bearer", accessToken);
 
@@ -480,31 +618,21 @@ namespace AppTracNghiem.Services
 
                 var query = queryParams.Count > 0 ? "?" + string.Join("&", queryParams) : "";
                 var url = ApiConfig.GetFullUrl($"/api/contest{query}");
-                
-                Console.WriteLine($"[ContestService] GetAllContestsAsync - URL: {url}");
-                
+
                 var response = await _httpClient.GetAsync(url);
                 var responseContent = await response.Content.ReadAsStringAsync();
-
-                Console.WriteLine($"[ContestService] GetAllContestsAsync - Status: {response.StatusCode}");
-                Console.WriteLine($"[ContestService] GetAllContestsAsync - Response: {responseContent}");
 
                 if (response.IsSuccessStatusCode)
                 {
                     var result = JsonConvert.DeserializeObject<dynamic>(responseContent);
                     var contestsJson = result.data.ToString();
-                    
-                    Console.WriteLine($"[ContestService] GetAllContestsAsync - Contests JSON: {contestsJson}");
-                    
+                                        
                     var contests = JsonConvert.DeserializeObject<List<ContestModel>>(contestsJson);
-                    
-                    Console.WriteLine($"[ContestService] GetAllContestsAsync - Deserialized {contests?.Count ?? 0} contests");
-                    
+                                        
                     return contests ?? new List<ContestModel>();
                 }
                 else
                 {
-                    Console.WriteLine($"[ContestService] GetAllContestsAsync - Failed with status {response.StatusCode}");
                     return new List<ContestModel>();
                 }
             }
@@ -512,10 +640,7 @@ namespace AppTracNghiem.Services
             {
                 Console.WriteLine($"[ContestService] GetAllContestsAsync - Exception: {ex.Message}");
                 Console.WriteLine($"[ContestService] GetAllContestsAsync - StackTrace: {ex.StackTrace}");
-                if (ex.InnerException != null)
-                {
-                    Console.WriteLine($"[ContestService] GetAllContestsAsync - InnerException: {ex.InnerException.Message}");
-                }
+                
                 return new List<ContestModel>();
             }
         }
@@ -542,6 +667,62 @@ namespace AppTracNghiem.Services
             {
                 Console.WriteLine($"[ContestService] DeleteContestAsync - Exception: {ex.Message}");
                 return false;
+            }
+        }
+
+        public async Task<bool> UpdateContestCountQuestionsAsync(
+            string contestId,
+            int countMultipleChoice,
+            int countEssay,
+            string accessToken)
+        {
+            try
+            {
+                Console.WriteLine($"[ContestService] UpdateContestCountQuestionsAsync - ContestId: {contestId}");
+                Console.WriteLine($"[ContestService] UpdateContestCountQuestionsAsync - MC: {countMultipleChoice}, Essay: {countEssay}");
+                
+                _httpClient.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue("Bearer", accessToken);
+
+                var request = new
+                {
+                    countMultipleChoiceQuestions = countMultipleChoice,
+                    countEssayQuestions = countEssay
+                };
+
+                var json = JsonConvert.SerializeObject(request);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await _httpClient.PutAsync(
+                    ApiConfig.GetFullUrl($"/api/contest/{contestId}"),
+                    content);
+
+                Console.WriteLine($"[ContestService] UpdateContestCountQuestionsAsync - Status: {response.StatusCode}");
+
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[ContestService] UpdateContestCountQuestionsAsync - Exception: {ex.Message}");
+                return false;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    _httpClient?.Dispose();
+                }
+                _disposed = true;
             }
         }
     }

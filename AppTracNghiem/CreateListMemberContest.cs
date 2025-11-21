@@ -52,12 +52,6 @@ namespace AppTracNghiem
             LoadMembersFromServer();
         }
 
-        private void CreateListMemberContest_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            // Members đã được lưu ngay khi thêm/xóa qua API
-            // Không cần save khi đóng form
-        }
-
         private async void LoadMembersFromServer()
         {
             try
@@ -203,6 +197,10 @@ namespace AppTracNghiem
                     member.Id
                 );
             }
+        }
+
+        private void CreateListMemberContest_FormClosing(object sender, FormClosingEventArgs e)
+        {
         }
     }
 }

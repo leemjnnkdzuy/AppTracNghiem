@@ -98,6 +98,7 @@ namespace AppTracNghiem
                 dungeonNumeric1.Value = 1;
                 dungeonToggleButton1.Toggled = false;
                 materialRadioButton2.Checked = true;
+                materialCheckBox1.Checked = true;
                 this.Text = "Tạo đề thi mới";
             }
         }
@@ -180,7 +181,8 @@ namespace AppTracNghiem
             }
 
             var createListMemberForm = new CreateListMemberContest(_contestId);
-            if (createListMemberForm.ShowDialog() == DialogResult.OK)
+            
+            createListMemberForm.FormClosed += async (s, args) => 
             {
                 var tokenData = TokenManager.GetTokenData();
                 if (tokenData != null)
@@ -189,12 +191,27 @@ namespace AppTracNghiem
                     _membersCount = members.Count;
                     UpdateMemberListButton();
                 }
-            }
+                this.Show();
+                this.BringToFront();
+            };
+            
+            createListMemberForm.Show();
+            this.Hide();
         }
 
         private async void materialButton2_Click(object sender, EventArgs e)
         {
-            // Nút "Tạo Bộ Câu Hỏi" - Mở form CreateExamQuestion
+            await SaveContestData("draft");
+            if (!materialCheckBox1.Checked && !materialCheckBox2.Checked)
+            {
+                MessageBox.Show(
+                    "Vui lòng chọn ít nhất một loại câu hỏi!\n\n" +
+                    "- Trắc Nghiệm\n" +
+                    "- Tự Luận",
+                    "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             if (string.IsNullOrEmpty(_contestId))
             {
                 if (!await SaveContestData("draft"))
@@ -205,10 +222,17 @@ namespace AppTracNghiem
 
             var createExamQuestionForm = new CreateExamQuestion(
                 _contestId, 
-                materialCheckBox1.Checked,  // hasMultipleChoice
-                materialCheckBox2.Checked    // hasEssay
+                materialCheckBox1.Checked,
+                materialCheckBox2.Checked
             );
-            createExamQuestionForm.FormClosed += (s, args) => this.Close();
+            
+            // Khi đóng CreateExamQuestion, hiển thị lại CreateContestForm
+            createExamQuestionForm.FormClosed += (s, args) => 
+            {
+                this.Show();
+                this.BringToFront();
+            };
+            
             createExamQuestionForm.Show();
             this.Hide();
         }
@@ -223,7 +247,6 @@ namespace AppTracNghiem
 
         private async void MaterialButton3_Click(object? sender, EventArgs e)
         {
-            // Nút "Hoàn Tất Tạo Đề" - Logic sẽ viết sau
             MessageBox.Show("Chức năng đang phát triển", 
                 "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
@@ -233,6 +256,16 @@ namespace AppTracNghiem
             if (string.IsNullOrWhiteSpace(materialMaskedTextBox1.Text))
             {
                 MessageBox.Show("Vui lòng nhập tên đề thi!",
+                    "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+            }
+
+            if (!materialCheckBox1.Checked && !materialCheckBox2.Checked)
+            {
+                MessageBox.Show(
+                    "Vui lòng chọn ít nhất một loại câu hỏi cho đề thi!\n\n" +
+                    "- Trắc Nghiệm\n" +
+                    "- Tự Luận",
                     "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
@@ -275,7 +308,7 @@ namespace AppTracNghiem
                     };
 
                     var response = await _contestService.CreateContestAsync(createRequest, tokenData.AccessToken);
-                    if (response?.Success == true && response.Data != null)
+                    if (response?.Success == true && response.Data?.Id != null)
                     {
                         _contestId = response.Data.Id;
                         _isEditMode = true;

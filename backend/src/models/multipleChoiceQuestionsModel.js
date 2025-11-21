@@ -19,10 +19,6 @@ const multipleChoiceQuestionSchema = new mongoose.Schema(
 				},
 			},
 		],
-		explanation: {
-			type: String,
-			trim: true,
-		},
 		difficulty: {
 			type: String,
 			enum: ["easy", "medium", "hard"],
@@ -42,7 +38,6 @@ const multipleChoiceQuestionSchema = new mongoose.Schema(
 	}
 );
 
-// Validation: Đảm bảo có ít nhất một đáp án đúng
 multipleChoiceQuestionSchema.pre("save", function (next) {
 	const hasCorrectAnswer = this.options.some((option) => option.isCorrect);
 	if (!hasCorrectAnswer) {

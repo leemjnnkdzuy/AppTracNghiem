@@ -2,7 +2,8 @@ const express = require("express");
 const multer = require("multer");
 const {
 	uploadDocument,
-	generateQuestions,
+	generateQuestionBank,
+	addQuestionsToContest,
 	getQuestionsByContest,
 	updateMultipleChoiceQuestion,
 	updateEssayQuestion,
@@ -60,11 +61,20 @@ router.post(
 	uploadDocument
 );
 
+// Generate question bank (không lưu vào contest)
 router.post(
-	"/generate-questions",
+	"/generate-question-bank",
 	authenticate,
 	requireAdmin,
-	generateQuestions
+	generateQuestionBank
+);
+
+// Add selected questions to contest
+router.post(
+	"/add-questions",
+	authenticate,
+	requireAdmin,
+	addQuestionsToContest
 );
 
 router.get(

@@ -2,7 +2,7 @@ const Contest = require("../models/contestModel");
 const {User} = require("../models/userModel");
 const MultipleChoiceQuestion = require("../models/multipleChoiceQuestionsModel");
 const EssayQuestion = require("../models/essayQuestionsModel");
-const generateExamQuestionService = require("../services/ganerateExamQuestionService");
+const generateExamQuestionService = require("../services/generateExamQuestionService");
 const AppError = require("../utils/errors");
 
 const uploadDocument = async (req, res) => {
@@ -25,15 +25,16 @@ const uploadDocument = async (req, res) => {
 			data: {
 				fileName: req.file.originalname,
 				fileSize: req.file.size,
-				content: documentContent.substring(0, 500),
+				content: documentContent,
 			},
 		});
 	} catch (error) {
+		console.error("[uploadDocument] Error:", error);
 		throw error;
 	}
 };
 
-const generateQuestions = async (req, res) => {
+const generateQuestionBank = async (req, res) => {
 	try {
 		const {
 			documentContent,
@@ -55,28 +56,116 @@ const generateQuestions = async (req, res) => {
 			);
 		}
 
-		if (
-			numMultipleChoice === undefined ||
-			numMultipleChoice < 0 ||
-			numEssay === undefined ||
-			numEssay < 0
-		) {
-			throw new AppError("Số lượng câu hỏi không hợp lệ", 400);
+		if (!contestId) {
+			throw new AppError("Thiếu contestId", 400);
+		}
+
+		const contest = await Contest.findById(contestId);
+		if (!contest) {
+			throw new AppError("Không tìm thấy contest", 404);
+		}
+
+		if (contest.createdBy.toString() !== userId) {
+			throw new AppError(
+				"Bạn không có quyền tạo câu hỏi cho đề thi này",
+				403
+			);
+		}
+
+		const requestedMC = parseInt(numMultipleChoice) || 0;
+		const requestedEssay = parseInt(numEssay) || 0;
+
+		if (requestedMC === 0 && requestedEssay === 0) {
+			throw new AppError("Phải tạo ít nhất một câu hỏi", 400);
 		}
 
 		const questions = await generateExamQuestionService.generateQuestions(
 			documentContent,
 			aiModel,
-			numMultipleChoice,
-			numEssay,
+			requestedMC,
+			requestedEssay,
 			userId,
 			contestId
 		);
 
 		res.status(200).json({
 			success: true,
-			message: "Tạo câu hỏi thành công",
+			message: "Tạo bộ câu hỏi thành công",
 			data: questions,
+		});
+	} catch (error) {
+		throw error;
+	}
+};
+
+const addQuestionsToContest = async (req, res) => {
+	try {
+		const {multipleChoiceQuestions, essayQuestions, contestId} = req.body;
+		const userId = req.user.id;
+
+		if (!contestId) {
+			throw new AppError("Thiếu contestId", 400);
+		}
+
+		const contest = await Contest.findById(contestId);
+		if (!contest) {
+			throw new AppError("Không tìm thấy contest", 404);
+		}
+
+		if (contest.createdBy.toString() !== userId) {
+			throw new AppError(
+				"Bạn không có quyền thêm câu hỏi vào đề thi này",
+				403
+			);
+		}
+
+		const savedMCIds = [];
+		const savedEssayIds = [];
+
+		if (multipleChoiceQuestions && multipleChoiceQuestions.length > 0) {
+			for (const mcqData of multipleChoiceQuestions) {
+				const {_id, createdAt, updatedAt, __v, ...cleanData} = mcqData;
+
+				const question = new MultipleChoiceQuestion(cleanData);
+				const saved = await question.save();
+				savedMCIds.push(saved._id);
+			}
+		}
+
+		if (essayQuestions && essayQuestions.length > 0) {
+			for (const eqData of essayQuestions) {
+				const {_id, createdAt, updatedAt, __v, ...cleanData} = eqData;
+
+				const question = new EssayQuestion(cleanData);
+				const saved = await question.save();
+				savedEssayIds.push(saved._id);
+			}
+		}
+
+		if (savedMCIds.length === 0 && savedEssayIds.length === 0) {
+			throw new AppError(
+				"Phải chọn ít nhất một câu hỏi để thêm vào đề thi",
+				400
+			);
+		}
+
+		if (savedMCIds.length > 0) {
+			contest.multipleChoiceQuestions.push(...savedMCIds);
+		}
+
+		if (savedEssayIds.length > 0) {
+			contest.essayQuestions.push(...savedEssayIds);
+		}
+
+		await contest.save();
+
+		res.status(200).json({
+			success: true,
+			message: "Lưu câu hỏi vào đề thi thành công",
+			data: {
+				multipleChoiceCount: contest.multipleChoiceQuestions.length,
+				essayCount: contest.essayQuestions.length,
+			},
 		});
 	} catch (error) {
 		throw error;
@@ -266,10 +355,6 @@ const updateContest = async (req, res) => {
 		const userId = req.user.id;
 		const updateData = req.body;
 
-		console.log("[updateContest] ContestId:", contestId);
-		console.log("[updateContest] UserId:", userId);
-		console.log("[updateContest] Update data:", updateData);
-
 		const existingContest = await Contest.findById(contestId);
 		if (!existingContest) {
 			throw new AppError("Không tìm thấy contest", 404);
@@ -284,15 +369,12 @@ const updateContest = async (req, res) => {
 			runValidators: true,
 		});
 
-		console.log("[updateContest] Contest updated successfully");
-
 		res.status(200).json({
 			success: true,
 			message: "Cập nhật đề thi thành công",
 			data: contest,
 		});
 	} catch (error) {
-		console.error("[updateContest] Error:", error);
 		throw error;
 	}
 };
@@ -323,33 +405,20 @@ const getAllContests = async (req, res) => {
 		const userId = req.user.id;
 		const {status, visibility} = req.query;
 
-		console.log("[getAllContests] UserId:", userId);
-		console.log("[getAllContests] Query params:", {status, visibility});
-
 		const query = {createdBy: userId};
 		if (status) query.status = status;
 		if (visibility) query.visibility = visibility;
-
-		console.log("[getAllContests] MongoDB query:", query);
 
 		const contests = await Contest.find(query)
 			.populate("createdBy", "full_name username")
 			.sort({createdAt: -1});
 
-		console.log("[getAllContests] Found contests:", contests.length);
-		if (contests.length > 0) {
-			console.log(
-				"[getAllContests] First contest:",
-				JSON.stringify(contests[0], null, 2)
-			);
-		}
 
 		res.status(200).json({
 			success: true,
 			data: contests,
 		});
 	} catch (error) {
-		console.error("[getAllContests] Error:", error);
 		throw error;
 	}
 };
@@ -482,16 +551,13 @@ const deleteContest = async (req, res) => {
 			throw new AppError("Không tìm thấy contest", 404);
 		}
 
-		// Kiểm tra quyền sở hữu
 		if (contest.createdBy.toString() !== userId) {
 			throw new AppError("Bạn không có quyền xóa đề thi này", 403);
 		}
 
-		// Xóa tất cả câu hỏi liên quan
 		await MultipleChoiceQuestion.deleteMany({contest: contestId});
 		await EssayQuestion.deleteMany({contest: contestId});
 
-		// Xóa contest
 		await Contest.findByIdAndDelete(contestId);
 
 		console.log("[deleteContest] Contest deleted successfully");
@@ -508,7 +574,8 @@ const deleteContest = async (req, res) => {
 
 module.exports = {
 	uploadDocument,
-	generateQuestions,
+	generateQuestionBank,
+	addQuestionsToContest,
 	getQuestionsByContest,
 	updateMultipleChoiceQuestion,
 	updateEssayQuestion,

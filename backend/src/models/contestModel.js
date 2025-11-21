@@ -50,7 +50,7 @@ const contestSchema = new mongoose.Schema(
 		},
 		hasMultipleChoice: {
 			type: Boolean,
-			default: false,
+			default: true,
 		},
 		hasEssay: {
 			type: Boolean,
@@ -71,6 +71,14 @@ const contestSchema = new mongoose.Schema(
 		maxAttempts: {
 			type: Number,
 			default: 1,
+		},
+		countMultipleChoiceQuestions: {
+			type: Number,
+			default: 0,
+		},
+		countEssayQuestions: {
+			type: Number,
+			default: 0,
 		},
 		members: [
 			{
